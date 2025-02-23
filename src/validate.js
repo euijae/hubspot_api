@@ -109,7 +109,13 @@ const validate = (globalIndexes) => {
     // For a given contact at a company, associations can be made for at most two roles
     _.forEach(globalContactNewIndex, (companies, contactId) => {
         _.forEach(companies, (roles, companyId) => {
-            const existingRoles = globalContactExistingIndex[contactId]?.[companyId] || [];
+            roles = _.get(globalContactNewIndex, [contactId, companyId], []);
+
+            if (!Array.isArray(roles)) {
+                return;
+            }
+
+            const existingRoles = _.get(globalContactExistingIndex, [contactId, companyId], []);
             let currentCount = existingRoles.length;
 
             roles.forEach(role => {
